@@ -1,5 +1,6 @@
 ﻿using BookWorm.Data.Models;
 using BookWorm.Data.Services;
+using BookWorm.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,7 @@ namespace BookWorm.Controllers
         readonly IAuthorData db;
         public AuthorsController()
         {
-            //I would use dependency injection here and get IAuthorData and assign it to this.db = IAuthorData
-            db = new AuthorData();
+            db = RepositoryFactory.CreateAuthorDataRepository();
         }
 
         [HttpGet]

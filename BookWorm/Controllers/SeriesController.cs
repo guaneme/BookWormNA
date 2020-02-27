@@ -1,5 +1,6 @@
 ﻿using BookWorm.Data.Models;
 using BookWorm.Data.Services;
+using BookWorm.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace BookWorm.Controllers
         public SeriesController()
         {
             //I would use dependency injection here and get ISeriesData and assign it to this.db = ISeriesData
-            db = new SeriesData();
+            db = RepositoryFactory.CreateSeriesDataRepository();
         }
 
         [HttpGet]

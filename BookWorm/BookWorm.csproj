@@ -136,10 +136,14 @@
     <Compile Include="Controllers\AuthorsController.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Models\BookEditViewModel.cs" />
+    <Compile Include="Services\IBookService.cs" />
     <Compile Include="Controllers\SeriesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="IoC\Fakes.cs" />
+    <Compile Include="IoC\RepositoryFactory.cs" />
     <Compile Include="Models\BookViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

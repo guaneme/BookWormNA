@@ -1,6 +1,8 @@
 ﻿using BookWorm.Data.Models;
 using BookWorm.Data.Services;
+using BookWorm.IoC;
 using BookWorm.Models;
+using BookWorm.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,26 +13,21 @@ namespace BookWorm.Controllers
 {
     public class BooksController : Controller
     {
-        readonly IBookData db;
+        readonly IBookService service;
         public BooksController()
         {
-            //I would use dependency injection here and get IBookData and assign it to this.db = IBookData
-            db = new BookData();
+            service = new BookService(
+                RepositoryFactory.CreateBookDataRepository(),
+                RepositoryFactory.CreateSeriesDataRepository(),
+                RepositoryFactory.CreateAuthorDataRepository(),
+                RepositoryFactory.CreateBookAuthorDataRepository()
+                );
         }
         [HttpGet]
         public ActionResult Index()
         {
-            var model = db.GetAll();
-            return View(model);
-        }
+            var model = service.GetList();
 
-        [HttpGet]
-        public ActionResult Index1()
-        {
-            BookViewModel model = new BookViewModel();
-            Book[] books = db.GetAll().ToArray();
-            //model.Book = books;
-            //var model = db.GetAll();
             return View(model);
         }
 
@@ -38,6 +35,7 @@ namespace BookWorm.Controllers
         [AllowAnonymous]
         public ActionResult ViewImage(int id)
         {
+            BookData db = new BookData(); //todo: replace
             var model = db.Get(id);
             if (model != null)
             {
@@ -60,7 +58,8 @@ namespace BookWorm.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
-            var model = db.Get(id);
+            var model = this.service.GetDetails(id);
+
             if (model != null)
             {
                 return View(model);
@@ -76,20 +75,20 @@ namespace BookWorm.Controllers
         {
             return View();
         }
-        
+
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create([Bind(Exclude = "coverArt")] Book book, HttpPostedFileBase coverArt)
+        public ActionResult Create([Bind(Exclude = "coverArt")] BookEditViewModel book, HttpPostedFileBase coverArt)
         {
             if (ModelState.IsValid)
             {
                 if (coverArt != null)
                 {
-                    book.CoverArt = new byte[coverArt.ContentLength];
-                    coverArt.InputStream.Read(book.CoverArt, 0, coverArt.ContentLength);
+                    //book.CoverArt = new byte[coverArt.ContentLength];
+                    //coverArt.InputStream.Read(book.CoverArt, 0, coverArt.ContentLength);
                 }
-                db.Add(book);
-                return RedirectToAction("Details", new { id = book.BookId });
+                this.service.SaveOrUpdate(book);
+                return RedirectToAction("Details", new { id = book.ID });
             }
             return View();
         }
@@ -97,7 +96,7 @@ namespace BookWorm.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var model = db.Get(id);
+            var model = this.service.GetForEdit(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -107,17 +106,17 @@ namespace BookWorm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Book book, HttpPostedFileBase coverArt)
+        public ActionResult Edit(BookEditViewModel book, HttpPostedFileBase coverArt)
         {
             if (ModelState.IsValid)
             {
                 if (coverArt != null)
                 {
-                    book.CoverArt = new byte[coverArt.ContentLength];
-                    coverArt.InputStream.Read(book.CoverArt, 0, coverArt.ContentLength);
+                    //book.CoverArt = new byte[coverArt.ContentLength];
+                    //coverArt.InputStream.Read(book.CoverArt, 0, coverArt.ContentLength);
                 }
-                db.Update(book);
-                return RedirectToAction("Details", new { id = book.BookId });
+                this.service.SaveOrUpdate(book);
+                return RedirectToAction("Details", new { id = book.ID });
             }
             return View(book);
         }
@@ -125,7 +124,7 @@ namespace BookWorm.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var model = db.Get(id);
+            var model = this.service.GetDetails(id);
             if (model == null)
             {
                 return View("NotFound");
@@ -137,7 +136,7 @@ namespace BookWorm.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, FormCollection form)
         {
-            db.Delete(id);
+            this.service.Delete(id);
             return RedirectToAction("Index");
         }
     }

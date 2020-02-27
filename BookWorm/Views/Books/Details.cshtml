@@ -1,10 +1,10 @@
-﻿@model BookWorm.Data.Models.Book
+﻿@model BookWorm.Models.BookViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
-    <h2>Details for  @Html.DisplayFor(model => model.Title)</h2>
+<h2>Details for  @Html.DisplayFor(model => model.Title)</h2>
 
 <div>
     <h4>Book</h4>
@@ -26,21 +26,21 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
 
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Author)
+        <dt>
+            @Html.DisplayNameFor(model => model.Authors)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Author)
+            @Html.DisplayFor(model => model.Authors)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookSeries)
+            @Html.DisplayNameFor(model => model.Series)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookSeries.Name)
-        </dd>*@
+            @Html.DisplayFor(model => model.Series)
+        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Rating)
@@ -51,17 +51,17 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CoverArt)
+            @*@Html.DisplayNameFor(model => model.CoverArt)*@
         </dt>
 
         <dd>
 
-            <img src="/Books/ViewImage/@Model.BookId" />
+            @*<img src="/Books/ViewImage/@Model.ID" />*@
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.BookId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
