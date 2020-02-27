@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="BookWorm.Data"
+                   namespace="BookWorm.Data.Models">
+
+
+  <class name="BookAuthor">
+    <id name="BookAuthorId">
+      <generator class="native" />
+    </id>
+    <property name="BookId" />
+    <property name="AuthorId" />
+  </class>
+
+</hibernate-mapping>
